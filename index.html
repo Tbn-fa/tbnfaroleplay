@@ -793,6 +793,35 @@
     box-shadow: 0 8px 32px var(--accent-glow);
   }
 
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .form-message {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    display: none;
+    text-align: center;
+  }
+
+  .form-message.show { display: block; animation: fadeIn 0.3s; }
+
+  .form-message.success {
+    background: rgba(74, 222, 128, 0.1);
+    border: 1px solid var(--green);
+    color: var(--green);
+  }
+
+  .form-message.error {
+    background: rgba(255, 85, 85, 0.1);
+    border: 1px solid var(--red);
+    color: var(--red);
+  }
+
   /* === STORE PAGE === */
   .store-container {
     padding: 0 5% 4rem;
@@ -1175,80 +1204,84 @@
 
     <div class="form-section-title">👤 Informations</div>
 
-    <div class="form-group">
-      <label>Identifiant Discord <span class="required">*</span> <span class="hint">(clic droit sur ton pseudo > copier l'ID de l'utilisateur)</span></label>
-      <input type="text" placeholder="Ex : 123456789012345678">
-    </div>
-
-    <div class="form-group">
-      <label>Pseudo en jeu <span class="required">*</span></label>
-      <input type="text" placeholder="Ton pseudo en jeu FiveM">
-    </div>
-
-    <div class="form-row">
+    <form id="staff-form" onsubmit="submitApplication(event)">
       <div class="form-group">
-        <label>Âge <span class="required">*</span> <span class="hint">(minimum 16 ans)</span></label>
-        <input type="number" placeholder="18" min="16">
+        <label>Identifiant Discord <span class="required">*</span> <span class="hint">(clic droit sur ton pseudo > copier l'ID de l'utilisateur)</span></label>
+        <input type="text" id="discord-id" placeholder="Ex : 123456789012345678" required maxlength="20">
       </div>
+
       <div class="form-group">
-        <label>Date de naissance <span class="required">*</span></label>
-        <input type="date">
+        <label>Pseudo en jeu <span class="required">*</span></label>
+        <input type="text" id="pseudo" placeholder="Ton pseudo en jeu FiveM" required maxlength="50">
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Disponibilités <span class="hint">(clique sur les cases pour indiquer tes créneaux)</span></label>
-      <div class="availability-grid">
-        <div class="day-label">Lun</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Mar</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Mer</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Jeu</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Ven</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Sam</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
-
-        <div class="day-label">Dim</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Matin</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Après-midi</div>
-        <div class="slot" onclick="this.classList.toggle('active')">Soir</div>
-        <div class="slot active" onclick="this.classList.toggle('active')">Aucune</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Âge <span class="required">*</span> <span class="hint">(minimum 16 ans)</span></label>
+          <input type="number" id="age" placeholder="18" min="16" max="99" required>
+        </div>
+        <div class="form-group">
+          <label>Date de naissance <span class="required">*</span></label>
+          <input type="date" id="birthdate" required>
+        </div>
       </div>
-    </div>
 
-    <div class="form-group">
-      <label>Pourquoi veux-tu rejoindre le staff ? <span class="required">*</span></label>
-      <textarea rows="5" placeholder="Explique-nous tes motivations..."></textarea>
-    </div>
+      <div class="form-group">
+        <label>Disponibilités <span class="hint">(clique sur les cases pour indiquer tes créneaux)</span></label>
+        <div class="availability-grid" id="availability">
+          <div class="day-label">Lun</div>
+          <div class="slot" data-day="Lundi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Lundi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Lundi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Lundi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
 
-    <button class="submit-btn">Envoyer ma candidature</button>
+          <div class="day-label">Mar</div>
+          <div class="slot" data-day="Mardi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Mardi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Mardi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Mardi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+
+          <div class="day-label">Mer</div>
+          <div class="slot" data-day="Mercredi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Mercredi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Mercredi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Mercredi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+
+          <div class="day-label">Jeu</div>
+          <div class="slot" data-day="Jeudi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Jeudi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Jeudi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Jeudi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+
+          <div class="day-label">Ven</div>
+          <div class="slot" data-day="Vendredi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Vendredi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Vendredi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Vendredi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+
+          <div class="day-label">Sam</div>
+          <div class="slot" data-day="Samedi" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Samedi" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Samedi" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Samedi" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+
+          <div class="day-label">Dim</div>
+          <div class="slot" data-day="Dimanche" data-slot="Matin" onclick="toggleSlot(this)">Matin</div>
+          <div class="slot" data-day="Dimanche" data-slot="Après-midi" onclick="toggleSlot(this)">Après-midi</div>
+          <div class="slot" data-day="Dimanche" data-slot="Soir" onclick="toggleSlot(this)">Soir</div>
+          <div class="slot active" data-day="Dimanche" data-slot="Aucune" onclick="toggleSlot(this)">Aucune</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Pourquoi veux-tu rejoindre le staff ? <span class="required">*</span></label>
+        <textarea id="motivation" rows="5" placeholder="Explique-nous tes motivations..." required minlength="50" maxlength="1500"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submit-btn">Envoyer ma candidature</button>
+
+      <div class="form-message" id="form-message"></div>
+    </form>
   </div>
 </div>
 
@@ -1390,6 +1423,135 @@
       btn.classList.add('active');
     });
   });
+
+  // ============================================
+  // SYSTÈME DE CANDIDATURE → DISCORD WEBHOOK
+  // ============================================
+
+  // ⚠️ REMPLACE CETTE URL PAR TON NOUVEAU WEBHOOK (regenère-le sur Discord !)
+  const WEBHOOK_URL = 'TON_NOUVEAU_WEBHOOK_URL_ICI';
+
+  // Gestion des créneaux : un seul slot actif par jour
+  function toggleSlot(el) {
+    const day = el.dataset.day;
+    // Désactive tous les autres slots du même jour
+    document.querySelectorAll(`.slot[data-day="${day}"]`).forEach(s => s.classList.remove('active'));
+    // Active celui cliqué
+    el.classList.add('active');
+  }
+
+  // Anti-spam : 1 envoi par 30 secondes
+  function canSubmit() {
+    const last = localStorage.getItem('lastSubmit');
+    if (!last) return true;
+    const elapsed = Date.now() - parseInt(last);
+    return elapsed > 30000;
+  }
+
+  function showMessage(text, type) {
+    const msg = document.getElementById('form-message');
+    msg.textContent = text;
+    msg.className = 'form-message show ' + type;
+    setTimeout(() => msg.classList.remove('show'), 8000);
+  }
+
+  async function submitApplication(e) {
+    e.preventDefault();
+
+    // Vérification webhook configuré
+    if (WEBHOOK_URL.includes('TON_NOUVEAU_WEBHOOK')) {
+      showMessage('⚠️ Le webhook Discord n\'est pas encore configuré. Contacte l\'admin du site.', 'error');
+      return;
+    }
+
+    // Anti-spam
+    if (!canSubmit()) {
+      showMessage('⏱️ Merci d\'attendre 30 secondes entre deux candidatures.', 'error');
+      return;
+    }
+
+    // Récupération des données
+    const discordId = document.getElementById('discord-id').value.trim();
+    const pseudo = document.getElementById('pseudo').value.trim();
+    const age = document.getElementById('age').value;
+    const birthdate = document.getElementById('birthdate').value;
+    const motivation = document.getElementById('motivation').value.trim();
+
+    // Validation supplémentaire
+    if (!/^\d{17,20}$/.test(discordId)) {
+      showMessage('❌ L\'identifiant Discord doit contenir entre 17 et 20 chiffres.', 'error');
+      return;
+    }
+
+    if (parseInt(age) < 16) {
+      showMessage('❌ Il faut avoir 16 ans minimum pour candidater.', 'error');
+      return;
+    }
+
+    if (motivation.length < 50) {
+      showMessage('❌ Ta motivation doit faire au moins 50 caractères. Sois plus détaillé !', 'error');
+      return;
+    }
+
+    // Récupération des disponibilités
+    const dispos = {};
+    document.querySelectorAll('.slot.active').forEach(s => {
+      dispos[s.dataset.day] = s.dataset.slot;
+    });
+    const disposText = Object.entries(dispos).map(([day, slot]) =>
+      `**${day}** : ${slot}`
+    ).join('\n');
+
+    // Bouton en mode "envoi"
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Envoi en cours...';
+
+    // Construction de l'embed Discord
+    const embed = {
+      title: '📋 Nouvelle candidature staff',
+      color: 0xa855f7, // violet
+      thumbnail: { url: 'https://cdn.discordapp.com/embed/avatars/0.png' },
+      fields: [
+        { name: '👤 Pseudo en jeu', value: pseudo, inline: true },
+        { name: '🎂 Âge', value: age + ' ans', inline: true },
+        { name: '📅 Date de naissance', value: birthdate, inline: true },
+        { name: '💬 Discord', value: `<@${discordId}>\n\`${discordId}\``, inline: false },
+        { name: '🗓️ Disponibilités', value: disposText || 'Aucune renseignée', inline: false },
+        { name: '✍️ Motivation', value: motivation.substring(0, 1024), inline: false }
+      ],
+      footer: { text: 'TBNFA · Candidature staff' },
+      timestamp: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'Candidatures TBNFA',
+          embeds: [embed]
+        })
+      });
+
+      if (response.ok || response.status === 204) {
+        localStorage.setItem('lastSubmit', Date.now().toString());
+        showMessage('✅ Ta candidature a été envoyée avec succès ! Le staff te contactera bientôt sur Discord.', 'success');
+        document.getElementById('staff-form').reset();
+        // Reset des slots
+        document.querySelectorAll('.slot').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.slot[data-slot="Aucune"]').forEach(s => s.classList.add('active'));
+      } else {
+        showMessage('❌ Erreur lors de l\'envoi. Réessaye plus tard ou contacte-nous sur Discord.', 'error');
+      }
+    } catch (err) {
+      showMessage('❌ Erreur réseau. Vérifie ta connexion et réessaye.', 'error');
+      console.error(err);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Envoyer ma candidature';
+    }
+  }
 </script>
 
 </body>
